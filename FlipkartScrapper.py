@@ -52,15 +52,17 @@ except Exception as e:
 set_viewport_size(driver, 820, 756)
 
 # Prepare to write to CSV
-with open('flipkart_phone_check_results.csv', mode='w', newline='', encoding='utf-8') as file:
+with open('flipkart_results.csv', mode='w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
     writer.writerow(["Phone Number", "Status"])  # CSV Header
 
     # Fetch phone numbers from Redis list using BRPOP
     while True:
         # Block and wait for a phone number from the Redis list 'flipkart_phone_list'
-        phone_number = redis.brpop('flipkart', timeout=30)  # timeout=0 means it blocks indefinitely
-
+        phone_number = redis_client.brpop('flipkart', timeout=30)  # timeout=0 means it blocks indefinitely
+        if not phone_number:
+            print("No more numbers to process. Exiting.")
+            break
         if phone_number:  # phone_number is a tuple, e.g., (key, value)
             phone_number = phone_number[1]  # Extracting the phone number and converting bytes to string
 
@@ -86,12 +88,15 @@ with open('flipkart_phone_check_results.csv', mode='w', newline='', encoding='ut
 
                 if "Signup" in popup.text:
                     print(f"Number {phone_number}: Absent")
+                    redis_client.lpush("flipkart_results", f"{phone_number},Absent")
                     present = 0
                 elif "OTP" in popup.text:
                     print(f"Number {phone_number}: Present")
+                    redis_client.lpush("flipkart_results", f"{phone_number},Present")
                     present = 1
                 elif "valid" in popup.text:
                     print(f"Number {phone_number}: Invalid")
+                    redis_client.lpush("flipkart_results", f"{phone_number},Invalid")
                     present = 2
 
                 # Save result to CSV
@@ -101,12 +106,22 @@ with open('flipkart_phone_check_results.csv', mode='w', newline='', encoding='ut
 
             except Exception as e:
                 print(f"Error processing number {phone_number}: {str(e)}")
+                redis_client.lpush("flipkart_results", f"{phone_number},Error")
                 writer.writerow([phone_number, "Error"])
                 # file.flush()  # Flush the content to disk immediately
 
             finally:
+                # time.sleep(2)  # Wait briefly for the page to reload
+                close_button = None
+                if present == 1:
+                    close_button = driver.find_element(By.XPATH,
+                                                       "//a[contains(text(), 'Create an account')]/parent::div")
+                    close_button.click()
+                elif present == 0:
+                    close_button = driver.find_element(By.XPATH, "//a[@href='#' and span[text()='Change?']]")
+                    close_button.click()
                 time.sleep(2)  # Wait briefly for the page to reload
-                file.flush()
+    file.flush()
 
 # Close the browser
-driver.quit()
+    driver.quit()

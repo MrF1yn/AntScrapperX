@@ -83,6 +83,7 @@ with open(output_file, mode="w", newline="") as file:
                     status = "Present"
 
                 print(f"Number {phone_number}: {status}")
+                redis_client.lpush("ajio_results", f"{phone_number},{status}")
 
             except Exception as e:
                 print(f"Error processing number {phone_number}: {str(e)}")
