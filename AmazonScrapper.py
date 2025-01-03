@@ -122,7 +122,17 @@ with open(output_file, mode="w", newline="") as file:
                     close_button = driver.find_element(By.XPATH, "//a[contains(text(), 'Change')]")
                     close_button.click()
                 except:
-
+                    try:
+                        driver.get("https://www.amazon.in")
+                        WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+                        # Click the Signup button
+                        signup_button = WebDriverWait(driver, timeout).until(
+                            EC.presence_of_element_located((By.XPATH, "//a[@data-nav-role='signin']"))
+                        )
+                        signup_button.click()
+                        time.sleep(1)
+                    except:
+                        pass
                     pass
                 redis_client.lpush("amazon_results", f"{phone_number},Error")
 
