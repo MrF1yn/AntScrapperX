@@ -41,9 +41,11 @@ def push_to_redis(file_path):
         with open(file_path, mode='r') as file:
             csv_reader = csv.reader(file)
             next(csv_reader, None)  # Skip header row if it exists
-
+            #onlu read 1000 rows
             # Process each phone number
-            for row in csv_reader:
+            for i, row in enumerate(csv_reader):
+                if i >= 1000:
+                    break
                 if row:
                     phone_number = row[0]
                     formatted_number = format_phone_number(phone_number)
