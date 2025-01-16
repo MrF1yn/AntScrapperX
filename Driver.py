@@ -11,7 +11,8 @@ redis_client = redis.Redis(
 )
 
 # Redis list names
-redis_lists = ['amazon', 'flipkart', 'ajio']
+redis_lists_numbers = ['amazon', 'flipkart', 'ajio', 'whatsapp']
+redis_lists_emails = ['quora']
 
 
 def format_phone_number(phone_number):
@@ -25,12 +26,14 @@ def format_phone_number(phone_number):
     Returns:
         str: Formatted phone number
     """
+    if "@" in phone_number:
+        return phone_number
     if len(phone_number) > 10:
         return phone_number[2:]
     return phone_number
 
 
-def push_to_redis(file_path):
+def push_to_redis(file_path, redis_lists):
     """
     Reads a CSV file containing phone numbers and pushes each number to all Redis lists.
 
@@ -65,4 +68,5 @@ def push_to_redis(file_path):
 
 if __name__ == "__main__":
     # file_path = input("Enter the path to the CSV file: ")
-    push_to_redis("phone-numbers-csv.csv")
+    # push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
+    push_to_redis("emails-csv.csv", redis_lists_emails)

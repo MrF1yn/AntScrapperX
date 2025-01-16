@@ -1,0 +1,15 @@
+endpoint : https://login.web.ajio.com/api/auth/accountCheck
+
+body:
+{
+    "mobileNumber": "7738091135"
+}
+
+header: [image attached]
+
+response: {
+    "success": false,
+    "captchaInputRequired": false,
+    "resetPasswordFirstLogin": false,
+    "updateNumberRequestWindow": "48 hours"
+}
