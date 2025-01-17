@@ -15,6 +15,15 @@ def create_table_if_not_exists(connection):
     with connection.cursor() as cursor:
         cursor.execute(create_table_query)
         connection.commit()
+    create_table_query = """
+    CREATE TABLE IF NOT EXISTS emails (
+        id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL
+    );
+    """
+    with connection.cursor() as cursor:
+        cursor.execute(create_table_query)
+        connection.commit()
 
 
 def update_phone_numbers_in_batches(file_path, batch_size, connection):
@@ -46,9 +55,42 @@ def update_phone_numbers_in_batches(file_path, batch_size, connection):
                 insert_batch(connection, batch)
                 batch = []
 
+        # # Insert any remaining records
+        # if batch:
+        #     insert_batch(connection, batch)
+
+def update_email_in_batches(file_path, batch_size, connection):
+    """
+    Reads phone numbers from a CSV file in batches and updates them in the phone_numbers table.
+
+    Args:
+        file_path (str): Path to the CSV file.
+        batch_size (int): Number of records to process in each batch.
+        connection (psycopg2 connection): Connection to the PostgreSQL database.
+    """
+    with open(file_path, 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+
+        # Skip header row if present
+        headers = next(csv_reader, None)
+        if headers and not headers[0].isdigit():
+            print("Skipping header row.")
+
+        batch = []
+        for row in csv_reader:
+            if len(row) != 1:
+                print(f"Skipping malformed row: {row}")
+                continue
+
+            batch.append(row[0])
+
+            if len(batch) >= batch_size:
+                insert_batch_email(connection, batch)
+                batch = []
+
         # Insert any remaining records
         if batch:
-            insert_batch(connection, batch)
+            insert_batch_email(connection, batch)
 
 
 def insert_batch(connection, batch):
@@ -66,19 +108,39 @@ def insert_batch(connection, batch):
     with connection.cursor() as cursor:
         cursor.executemany(insert_query, [(phone,) for phone in batch])
         connection.commit()
+        print("Inserted batch of phone numbers.")
 
+
+def insert_batch_email(connection, batch):
+    """
+    Inserts a batch of phone numbers into the phone_numbers table.
+
+    Args:
+        connection (psycopg2 connection): Connection to the PostgreSQL database.
+        batch (list): List of phone numbers to insert.
+    """
+    insert_query = """
+    INSERT INTO emails (email) VALUES (%s)
+    ON CONFLICT DO NOTHING;
+    """
+    with connection.cursor() as cursor:
+        cursor.executemany(insert_query, [(phone,) for phone in batch])
+        connection.commit()
+        print("Inserted batch of emails.")
 
 if __name__ == "__main__":
     # Database connection URL
     db_url = "postgresql://postgres:qS1hAyZFcQFqrre6@db.lthjdpnfcewonemuleed.supabase.co:5432/postgres"
 
-    csv_file_path = 'phone-numbers-csv.csv'  # Path to your CSV file
+    csv_file_path_phone = 'phone-numbers-csv.csv'  # Path to your CSV file
+    csv_file_path_email = 'emails-csv.csv'  # Path to your CSV file
     batch_size = 100  # Number of records to process in each batch
 
     try:
         with psycopg2.connect(db_url) as conn:
             create_table_if_not_exists(conn)
-            update_phone_numbers_in_batches(csv_file_path, batch_size, conn)
+            # update_phone_numbers_in_batches(csv_file_path_phone, batch_size, conn)
+            update_email_in_batches(csv_file_path_email, batch_size, conn)
             print("Phone numbers updated successfully.")
     except Exception as e:
         print(f"An error occurred: {e}")

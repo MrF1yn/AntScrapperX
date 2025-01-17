@@ -13,6 +13,12 @@ redis_client = redis.Redis(
     username="default",
     password="JMPog04EGI2MVcbO3HDPC9clDNyztfBX",
 )
+
+proxies = {
+    "http": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
+    "https": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
+}
+
 # Prepare to write to CSV
 with open('quora_results.csv', mode='w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
@@ -63,7 +69,7 @@ with open('quora_results.csv', mode='w', newline='', encoding='utf-8') as file:
                     }
                 }
 
-                response = requests.post(url, headers=headers, json=payload)
+                response = requests.post(url, headers=headers, json=payload, proxies=proxies)
                 status = response.json()["data"]["validateEmail"]
                 status = "Present" if status == "IN_USE" else "Absent"
                 print(email, status)
