@@ -106,7 +106,7 @@ with open('flipkart_results.csv', mode='w', newline='', encoding='utf-8') as fil
 
             except Exception as e:
                 print(f"Error processing number {phone_number}: {str(e)}")
-                redis_client.lpush("flipkart_results", f"{phone_number},Error")
+
                 writer.writerow([phone_number, "Error"])
                 # file.flush()  # Flush the content to disk immediately
 

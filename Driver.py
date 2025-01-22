@@ -1,5 +1,10 @@
 import csv
+from urllib.parse import urlparse
+
 import redis
+import threading
+import time
+import mysql.connector
 
 # Redis connection setup
 redis_client = redis.Redis(
@@ -10,10 +15,29 @@ redis_client = redis.Redis(
     password="JMPog04EGI2MVcbO3HDPC9clDNyztfBX",
 )
 
+DATABASE_URL = "postgresql://postgres:qS1hAyZFcQFqrre6@db.lthjdpnfcewonemuleed.supabase.co:5432/postgrese"
+
+# Parse the database URL
+db_url = urlparse(DATABASE_URL)
+mysql_conn = mysql.connector.connect(
+    host=db_url.hostname,
+    port=db_url.port,
+    user=db_url.username,
+    password=db_url.password,
+    database=db_url.path.lstrip('/'),
+)
+mysql_cursor = mysql_conn.cursor()
+
 # Redis list names
 redis_lists_numbers = ['amazon', 'flipkart', 'ajio', 'whatsapp']
 redis_lists_emails = ['quora']
+redis_results_channels = [f"{channel}_results" for channel in redis_lists_numbers + redis_lists_emails]
 
+# Array to store results before MySQL insertion
+results_buffer = []
+
+# Lock for thread safety
+buffer_lock = threading.Lock()
 
 def format_phone_number(phone_number):
     """
@@ -32,7 +56,6 @@ def format_phone_number(phone_number):
         return phone_number[2:]
     return phone_number
 
-
 def push_to_redis(file_path, redis_lists):
     """
     Reads a CSV file containing phone numbers and pushes each number to all Redis lists.
@@ -44,7 +67,7 @@ def push_to_redis(file_path, redis_lists):
         with open(file_path, mode='r') as file:
             csv_reader = csv.reader(file)
             next(csv_reader, None)  # Skip header row if it exists
-            #onlu read 1000 rows
+
             # Process each phone number
             for i, row in enumerate(csv_reader):
                 if i >= 1000:
@@ -63,10 +86,88 @@ def push_to_redis(file_path, redis_lists):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-    # Example usage
+def process_redis_results():
+    """
+    Continuously checks Redis lists for new results and updates them to MySQL when buffer size reaches 50.
+    """
+    global results_buffer
 
+    while True:
+        for channel in redis_results_channels:
+            try:
+                result = redis_client.rpop(channel)
+                if result:
+                    # Parse the Redis result (assuming key=value format)
+                    key, value = result.split(',', 1)
 
+                    # Add to buffer
+                    with buffer_lock:
+                        results_buffer.append((key, value+","+channel))
+
+                    # If buffer reaches 50, insert into MySQL
+                    if len(results_buffer) >= 50:
+                        flush_to_mysql()
+
+            except Exception as e:
+                print(f"Error processing Redis channel {channel}: {e}")
+
+        time.sleep(1)  # Avoid tight loop
+
+def flush_to_mysql():
+    """
+    Flushes the results buffer to the MySQL table, updating or inserting records as needed.
+    """
+    global results_buffer
+
+    with buffer_lock:
+        if not results_buffer:
+            return
+
+        try:
+            for key, value in results_buffer:
+                # Parse the value to determine the channel and date
+                parts = value.split(',')
+                if len(parts) != 2:
+                    print(f"Skipping invalid data format: {value}")
+                    continue
+
+                status, channel = parts
+                date = time.strftime('%Y-%m-%d %H:%M:%S')
+
+                # Check if the number exists in the table
+                mysql_cursor.execute("SELECT * FROM results WHERE numbers = %s", (key,))
+                existing_record = mysql_cursor.fetchone()
+
+                if existing_record:
+                    # Update the existing record
+                    update_query = f"UPDATE results SET {channel} = %s, {channel}_date = %s WHERE numbers = %s"
+                    mysql_cursor.execute(update_query, (status, date, key))
+                    print(f"Updated {key} for channel {channel}")
+                else:
+                    # Insert a new record
+                    insert_query = "INSERT INTO results (numbers, {channel}, {channel}_date) VALUES (%s, %s, %s)"
+                    formatted_query = insert_query.format(channel)
+                    mysql_cursor.execute(formatted_query, (key, status, date))
+                    print(f"Inserted new record for {key} with channel {channel}")
+
+            # Commit the changes
+            mysql_conn.commit()
+            print(f"Processed {len(results_buffer)} rows.")
+
+            # Clear the buffer
+            results_buffer = []
+
+        except mysql.connector.Error as e:
+            print(f"MySQL error: {e}")
 if __name__ == "__main__":
-    # file_path = input("Enter the path to the CSV file: ")
-    # push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
+    # Start the Redis monitoring thread
+    # redis_thread = threading.Thread(target=process_redis_results, daemon=True)
+    # redis_thread.start()
+
+    # Example usage
+    push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
     push_to_redis("emails-csv.csv", redis_lists_emails)
+
+    # Keep the main thread alive
+    while True:
+        time.sleep(1)
