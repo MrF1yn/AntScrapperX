@@ -44,7 +44,7 @@ seleniumwire_options = {
 options = Options()
 options.add_argument("--log-level=3")
 options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
-# options.add_argument("--headless")
+options.add_argument("--headless")
 # initialize the Chrome driver with service, selenium-wire options, and chrome options
 driver = webdriver.Chrome(
     seleniumwire_options=seleniumwire_options,

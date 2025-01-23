@@ -38,7 +38,7 @@ USER_AGENTS = [
 options = webdriver.ChromeOptions()
 options.add_argument("--log-level=3")
 options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
-
+options.add_argument("--headless")
 # Replace `webdriver.Chrome()` with the appropriate WebDriver instance if you're not using Chrome
 driver = webdriver.Chrome(options=options)
 

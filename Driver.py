@@ -15,7 +15,7 @@ redis_client = redis.Redis(
     password="JMPog04EGI2MVcbO3HDPC9clDNyztfBX",
 )
 
-DATABASE_URL = "postgresql://postgres:qS1hAyZFcQFqrre6@db.lthjdpnfcewonemuleed.supabase.co:5432/postgrese"
+DATABASE_URL = "postgresql://postgres:qS1hAyZFcQFqrre6@db.lthjdpnfcewonemuleed.supabase.co:5432/postgres"
 
 # Parse the database URL
 db_url = urlparse(DATABASE_URL)
