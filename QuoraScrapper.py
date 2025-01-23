@@ -69,7 +69,8 @@ with open('quora_results.csv', mode='w', newline='', encoding='utf-8') as file:
                     }
                 }
 
-                response = requests.post(url, headers=headers, json=payload, proxies=proxies)
+                # response = requests.post(url, headers=headers, json=payload, proxies=proxies)
+                response = requests.post(url, headers=headers, json=payload)
                 status = response.json()["data"]["validateEmail"]
                 status = "Present" if status == "IN_USE" else "Absent"
                 print(email, status)

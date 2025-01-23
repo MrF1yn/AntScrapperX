@@ -7,3 +7,5 @@ services:
       dockerfile: Dockerfile
     ports:
       - "18321:8080"
+    environment:
+      - SCRAPPER_NAME=quora

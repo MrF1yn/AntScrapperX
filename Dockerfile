@@ -1,44 +1,49 @@
-# Use the official Python 3.12 image from the Docker Hub
-FROM python:3.12
+# Use the official Python 3.12 image as the base
+FROM selenium/standalone-chrome
 
-RUN apt-get update && apt-get install -y \
-    wget \
-    unzip \
-    curl \
-    gnupg \
-    --no-install-recommends
+## Set environment variables
+ENV PYTHONUNBUFFERED=1
+##    DEBIAN_FRONTEND=noninteractive
 
-# Add Google Chrome repository and install Chrome
-RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-    && apt-get update && apt-get install -y \
-    google-chrome-stable \
-    --no-install-recommends
+# Update and install dependencies
+#RUN apt-get update && apt-get install -y \
+#    wget \
+#    curl \
+#    gnupg \
+#    unzip \
+#    && rm -rf /var/lib/apt/lists/*
 
-# Install ChromeDriver version 132
-RUN CHROMEDRIVER_VERSION=132.0.6834.83 \
-    && wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/$CHROMEDRIVER_VERSION/linux64/chromedriver-linux64.zip \
-    && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
-    && rm /tmp/chromedriver.zip
-
-# Set environment variables for Chrome and WebDriver
-ENV CHROME_BIN=/usr/bin/google-chrome
-ENV CHROME_DRIVER=/usr/local/bin/chromedriver
-
-# Set the working directory in the container
+## Install Google Chrome
+#RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+#    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+#    apt-get update && apt-get install -y \
+#    google-chrome-stable && \
+#    rm -rf /var/lib/apt/lists/*
+#
+## Install ChromeDriver
+#RUN wget -N https://storage.googleapis.com/chrome-for-testing-public/132.0.6834.110/linux64/chromedriver-linux64.zip && \
+#    unzip chromedriver-linux64.zip && \
+#    mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
+#    chmod +x /usr/local/bin/chromedriver && \
+#    rm -rf chromedriver-linux64 chromedriver-linux64.zip
+#
+## Set the working directory
 WORKDIR /app
 
-# Copy the requirements.txt file to the working directory
-COPY requirements.txt .
+RUN mkdir -p /tmp/chrome-data && \
+    chmod -R 777 /tmp/chrome-data
+RUN sudo apt update -y
+RUN sudo apt install python3.12-venv -y
+COPY . /app/
+# Copy the script and requirements into the container
+RUN sudo chmod -R 777 /app
+RUN python3 -m venv venv
+ENV PATH="/app/venv/bin:$PATH"
 
-# Install the required Python packages
+#COPY requirements.txt /app/
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Selenium
-RUN pip install selenium
-
-# Copy the application code to the working directory
-COPY . .
-
-# Set the command to run the application
-CMD ["python", "AmazonScrapper.py"]
+# Define the default command to run the script
+CMD ["venv/bin/python", "EnvDriver.py"]

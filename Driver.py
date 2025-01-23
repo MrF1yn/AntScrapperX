@@ -19,14 +19,16 @@ DATABASE_URL = "postgresql://postgres:qS1hAyZFcQFqrre6@db.lthjdpnfcewonemuleed.s
 
 # Parse the database URL
 db_url = urlparse(DATABASE_URL)
-mysql_conn = mysql.connector.connect(
-    host=db_url.hostname,
-    port=db_url.port,
-    user=db_url.username,
-    password=db_url.password,
-    database=db_url.path.lstrip('/'),
-)
-mysql_cursor = mysql_conn.cursor()
+mysql_conn = None
+# mysql_conn = mysql.connector.connect(
+#     host=db_url.hostname,
+#     port=db_url.port,
+#     user=db_url.username,
+#     password=db_url.password,
+#     database=db_url.path.lstrip('/'),
+# )
+# mysql_cursor = mysql_conn.cursor()
+mysql_cursor = None
 
 # Redis list names
 redis_lists_numbers = ['amazon', 'flipkart', 'ajio', 'whatsapp']
@@ -38,6 +40,7 @@ results_buffer = []
 
 # Lock for thread safety
 buffer_lock = threading.Lock()
+
 
 def format_phone_number(phone_number):
     """
@@ -55,6 +58,7 @@ def format_phone_number(phone_number):
     if len(phone_number) > 10:
         return phone_number[2:]
     return phone_number
+
 
 def push_to_redis(file_path, redis_lists):
     """
@@ -86,6 +90,7 @@ def push_to_redis(file_path, redis_lists):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+
 def process_redis_results():
     """
     Continuously checks Redis lists for new results and updates them to MySQL when buffer size reaches 50.
@@ -102,7 +107,7 @@ def process_redis_results():
 
                     # Add to buffer
                     with buffer_lock:
-                        results_buffer.append((key, value+","+channel))
+                        results_buffer.append((key, value + "," + channel))
 
                     # If buffer reaches 50, insert into MySQL
                     if len(results_buffer) >= 50:
@@ -112,6 +117,7 @@ def process_redis_results():
                 print(f"Error processing Redis channel {channel}: {e}")
 
         time.sleep(1)  # Avoid tight loop
+
 
 def flush_to_mysql():
     """
@@ -159,13 +165,15 @@ def flush_to_mysql():
 
         except mysql.connector.Error as e:
             print(f"MySQL error: {e}")
+
+
 if __name__ == "__main__":
     # Start the Redis monitoring thread
     # redis_thread = threading.Thread(target=process_redis_results, daemon=True)
     # redis_thread.start()
 
     # Example usage
-    push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
+    # push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
     push_to_redis("emails-csv.csv", redis_lists_emails)
 
     # Keep the main thread alive

@@ -1,3 +1,4 @@
+import os
 import random
 import redis
 import csv
@@ -38,7 +39,10 @@ USER_AGENTS = [
 options = webdriver.ChromeOptions()
 options.add_argument("--log-level=3")
 options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
+# options.add_argument(f"--user-data-dir=/tmp/chrome-data")
 options.add_argument("--headless")
+  # Unique user data directory
+
 # Replace `webdriver.Chrome()` with the appropriate WebDriver instance if you're not using Chrome
 driver = webdriver.Chrome(options=options)
 
@@ -105,21 +109,24 @@ with open('flipkart_results.csv', mode='w', newline='', encoding='utf-8') as fil
                 # file.flush()  # Flush the content to disk immediately
 
             except Exception as e:
-                print(f"Error processing number {phone_number}: {str(e)}")
+                print(f"Error processing number {phone_number}")
 
                 writer.writerow([phone_number, "Error"])
                 # file.flush()  # Flush the content to disk immediately
 
             finally:
                 # time.sleep(2)  # Wait briefly for the page to reload
-                close_button = None
-                if present == 1:
-                    close_button = driver.find_element(By.XPATH,
-                                                       "//a[contains(text(), 'Create an account')]/parent::div")
-                    close_button.click()
-                elif present == 0:
-                    close_button = driver.find_element(By.XPATH, "//a[@href='#' and span[text()='Change?']]")
-                    close_button.click()
+                try:
+                    close_button = None
+                    if present == 1:
+                        close_button = driver.find_element(By.XPATH,
+                                                           "//a[contains(text(), 'Create an account')]/parent::div")
+                        close_button.click()
+                    elif present == 0:
+                        close_button = driver.find_element(By.XPATH, "//a[@href='#' and span[text()='Change?']]")
+                        close_button.click()
+                except Exception as e:
+                    print(f"Error closing popup for number {phone_number}")
                 time.sleep(2)  # Wait briefly for the page to reload
     file.flush()
 

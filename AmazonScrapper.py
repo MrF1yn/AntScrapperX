@@ -45,9 +45,10 @@ options = Options()
 options.add_argument("--log-level=3")
 options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
 options.add_argument("--headless")
+options.add_argument("--window-size=1200,500")
 # initialize the Chrome driver with service, selenium-wire options, and chrome options
 driver = webdriver.Chrome(
-    seleniumwire_options=seleniumwire_options,
+    # seleniumwire_options=seleniumwire_options,
     options=options
 )
 # Configure WebDriver
@@ -117,7 +118,7 @@ with open(output_file, mode="w", newline="") as file:
                 print(f"Number {phone_number}: {status}: {popup_html}")
                 redis_client.lpush("amazon_results", f"{phone_number},{status}")
             except Exception as e:
-                print(f"Error processing number {phone_number}: {str(e)}")
+                print(f"Error processing number {phone_number}: {e}")
                 try:
                     close_button = driver.find_element(By.XPATH, "//a[contains(text(), 'Change')]")
                     close_button.click()
