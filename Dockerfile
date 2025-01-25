@@ -1,5 +1,5 @@
 # Use the official Python 3.12 image as the base
-FROM selenium/standalone-chrome
+FROM python:3.9-slim
 
 ## Set environment variables
 ENV PYTHONUNBUFFERED=1
@@ -32,13 +32,19 @@ WORKDIR /app
 
 RUN mkdir -p /tmp/chrome-data && \
     chmod -R 777 /tmp/chrome-data
-RUN sudo apt update -y
-RUN sudo apt install python3.12-venv -y
-COPY . /app/
+#RUN apt update -y
+#RUN apt install python3.12-venv -y
+COPY EnvDriver.py /app/
+COPY Driver.py /app/
+COPY AmazonScrapper.py /app/
+COPY FlipkartScrapper.py /app/
+COPY QuoraScrapper.py /app/
+COPY CombinedScrapper.py /app/
+COPY requirements.txt /app/
 # Copy the script and requirements into the container
-RUN sudo chmod -R 777 /app
-RUN python3 -m venv venv
-ENV PATH="/app/venv/bin:$PATH"
+RUN chmod -R 777 /app
+#RUN python3 -m venv venv
+#ENV PATH="/app/venv/bin:$PATH"
 
 #COPY requirements.txt /app/
 
@@ -46,4 +52,4 @@ ENV PATH="/app/venv/bin:$PATH"
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Define the default command to run the script
-CMD ["venv/bin/python", "EnvDriver.py"]
+CMD ["python", "EnvDriver.py"]

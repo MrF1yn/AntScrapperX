@@ -31,7 +31,7 @@ mysql_conn = None
 mysql_cursor = None
 
 # Redis list names
-redis_lists_numbers = ['amazon', 'flipkart', 'ajio', 'whatsapp']
+redis_lists_numbers = ['amazon', 'flipkart', 'whatsapp', "india_ajio_housing_toi_mobile_data"]
 redis_lists_emails = ['quora']
 redis_results_channels = [f"{channel}_results" for channel in redis_lists_numbers + redis_lists_emails]
 
@@ -74,7 +74,7 @@ def push_to_redis(file_path, redis_lists):
 
             # Process each phone number
             for i, row in enumerate(csv_reader):
-                if i >= 1000:
+                if i >= 100:
                     break
                 if row:
                     phone_number = row[0]
@@ -173,8 +173,8 @@ if __name__ == "__main__":
     # redis_thread.start()
 
     # Example usage
-    # push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
-    push_to_redis("emails-csv.csv", redis_lists_emails)
+    push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
+    # push_to_redis("emails-csv.csv", redis_lists_emails)
 
     # Keep the main thread alive
     while True:

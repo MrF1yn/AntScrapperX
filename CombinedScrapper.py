@@ -57,19 +57,19 @@
 #             "Content-Type": "application/json",
 #             "Referrer-Policy": "strict-origin-when-cross-origin"
 #         }
-            
+
 #         payload = {
 #             "mobileNumber": mobile
 #         }
-        
+
 #         async with session.post(url, headers=headers, json=payload) as response:
 #             print(f"AJIO status code for {mobile}: {response.status}")  # Debug print
-            
+
 #             if response.status == 200:
 #                 try:
 #                     response_data = await response.json()
 #                     print(f"AJIO Response for {mobile}: {response_data}")  # Debug print
-                    
+
 #                     is_success = response_data.get("success", False)
 #                     return "registered" if is_success else "unregistered"
 #                 except Exception as e:
@@ -78,11 +78,11 @@
 #             else:
 #                 print(f"AJIO API error response: {await response.text()}")  # Debug print
 #                 return "error"
-                
+
 #     except Exception as e:
 #         print(f"AJIO API error for mobile {mobile}: {str(e)}")
 #         return "error"
-        
+
 # async def check_housing(session, mobile):
 #     try:
 #         url = "https://mightyzeus-mum.housing.com/api/gql/network-only?apiName=CHECK_LOGIN_DETAIL&emittedFrom=client_buy_SRP&isBot=false&platform=desktop&source=web&source_name=AudienceWeb"
@@ -113,12 +113,12 @@
 
 #         async with session.post(url, headers=headers, json=payload) as response:
 #             print(f"Housing status code for {mobile}: {response.status}")
-            
+
 #             if response.status == 200:
 #                 try:
 #                     response_data = await response.json()
 #                     print(f"Housing Response for {mobile}: {response_data}")
-                    
+
 #                     check_details = response_data.get("data", {}).get("checkDetail", [])
 #                     if check_details and len(check_details) > 0:
 #                         status = check_details[0].get("status")
@@ -133,7 +133,7 @@
 #     except Exception as e:
 #         print(f"Housing API error for mobile {mobile}: {str(e)}")
 #         return "error"
-    
+
 # async def check_indiamart(session, mobile):
 #     try:
 #         url = "https://utils.imimg.com/header/js/evaluate.php"
@@ -144,7 +144,7 @@
 #             "Origin": "https://buyer.indiamart.com",
 #             "Referer": "https://buyer.indiamart.com/"
 #         }
-        
+
 #         payload = {
 #             "username": mobile,
 #             "iso": "IN",
@@ -160,29 +160,25 @@
 #             "country": "India",
 #             "service_code": "5"
 #         }
-        
+
 #         async with session.post(url, headers=headers, data=payload, proxies=proxies) as response:
 #             if response.status == 200:
 #                 response_text = await response.text()
 #                 try:
 #                     response_data = json.loads(response_text)
-                    
-                    
-        
+
+
 #                     code = response_data.get("code")
-    
-         
-                    
-                    
+
+
 #                     if code == "200" or code == 200 :
 #                         return "registered"
-                
-                    
-                    
+
+
 #                     if code == "204":
 #                         return "not registered"
 
-                    
+
 #                     return "error"
 
 #                 except json.JSONDecodeError as e:
@@ -232,7 +228,7 @@
 
 #     timeout = aiohttp.ClientTimeout(total=300)  
 #     connector = aiohttp.TCPConnector(limit=10)  
-    
+
 #     async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
 #         tasks = [process_row(row, session) for _, row in data.iterrows()]
 #         results = await asyncio.gather(*tasks)
@@ -274,13 +270,13 @@
 # #     event_handler = logging.FileHandler(f'logs/events_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
 # #     event_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 # #     event_logger.addHandler(event_handler)
-    
+
 # #     perf_logger = logging.getLogger('perf_logger')
 # #     perf_logger.setLevel(logging.INFO)
 # #     perf_handler = logging.FileHandler(f'logs/performance_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
 # #     perf_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 # #     perf_logger.addHandler(perf_handler)
-    
+
 # #     return event_logger, perf_logger
 
 # # class PerformanceMonitor(Thread):
@@ -289,7 +285,7 @@
 # #         self.interval = interval
 # #         self.perf_logger = perf_logger
 # #         self.running = True
-        
+
 # #     def run(self):
 # #         while self.running:
 # #             cpu_percent = psutil.cpu_percent(interval=1)
@@ -298,7 +294,7 @@
 # #                 f"CPU Usage: {cpu_percent}% | Memory Usage: {memory.percent}% | Available Memory: {memory.available / 1024 / 1024:.2f} MB"
 # #             )
 # #             time.sleep(self.interval)
-            
+
 # #     def stop(self):
 # #         self.running = False
 
@@ -308,15 +304,15 @@
 # #         self.output_file = output_file
 # #         self.queue = queue.Queue()
 # #         self.running = True
-        
+
 # #         headers = ["UID", "Mobile", "Indiamart", "TimesOfIndia", "Housing", "AJIO", "Timestamp"]
 # #         with open(self.output_file, 'w', newline='') as f:
 # #             writer = csv.writer(f)
 # #             writer.writerow(headers)
-    
+
 # #     def add_result(self, result: Dict[str, Any]):
 # #         self.queue.put(result)
-    
+
 # #     def run(self):
 # #         while self.running or not self.queue.empty():
 # #             try:
@@ -334,14 +330,14 @@
 # #                     ])
 # #             except queue.Empty:
 # #                 continue
-    
+
 # #     def stop(self):
 # #         self.running = False
 
 # # async def check_toi(session: aiohttp.ClientSession, mobile: str, event_logger: logging.Logger) -> str:
 # #     start_time = time.time()
 # #     event_logger.info(f"Starting TOI check for {mobile}")
-    
+
 # #     try:
 # #         url = "https://jsso.indiatimes.com/sso/crossapp/identity/web/checkUserExists"
 # #         headers = {
@@ -353,11 +349,11 @@
 # #             "sdkversion": "0.7.993"
 # #         }
 # #         payload = {"identifier": mobile}
-        
+
 # #         async with session.post(url, headers=headers, json=payload) as response:
 # #             response_time = time.time() - start_time
 # #             event_logger.info(f"TOI API response time for {mobile}: {response_time:.2f}s")
-            
+
 # #             if response.status == 200:
 # #                 response_data = await response.json()
 # #                 status_code = response_data.get("data", {}).get("statusCode")
@@ -374,7 +370,7 @@
 # # async def check_ajio(session: aiohttp.ClientSession, mobile: str, event_logger: logging.Logger) -> str:
 # #     start_time = time.time()
 # #     event_logger.info(f"Starting AJIO check for {mobile}")
-    
+
 # #     try:
 # #         url = "https://login.web.ajio.com/api/auth/accountCheck"
 # #         headers = {
@@ -382,11 +378,11 @@
 # #             "Referrer-Policy": "strict-origin-when-cross-origin"
 # #         }
 # #         payload = {"mobileNumber": mobile}
-        
+
 # #         async with session.post(url, headers=headers, json=payload) as response:
 # #             response_time = time.time() - start_time
 # #             event_logger.info(f"AJIO API response time for {mobile}: {response_time:.2f}s")
-            
+
 # #             if response.status == 200:
 # #                 response_data = await response.json()
 # #                 is_success = response_data.get("success", False)
@@ -403,7 +399,7 @@
 # # async def check_housing(session: aiohttp.ClientSession, mobile: str, event_logger: logging.Logger) -> str:
 # #     start_time = time.time()
 # #     event_logger.info(f"Starting Housing check for {mobile}")
-    
+
 # #     try:
 # #         url = "https://mightyzeus-mum.housing.com/api/gql/network-only?apiName=CHECK_LOGIN_DETAIL&emittedFrom=client_buy_SRP&isBot=false&platform=desktop&source=web&source_name=AudienceWeb"
 # #         headers = {
@@ -426,11 +422,11 @@
 # #             "query": "\n  query($email: String, $phone: String) {\n    checkDetail(phone: $phone, email: $email) {\n      key\n      id\n      present\n      status\n      associatedTo\n      message\n    }\n  }\n",
 # #             "variables": {"phone": mobile}
 # #         }
-        
+
 # #         async with session.post(url, headers=headers, json=payload) as response:
 # #             response_time = time.time() - start_time
 # #             event_logger.info(f"Housing API response time for {mobile}: {response_time:.2f}s")
-            
+
 # #             if response.status == 200:
 # #                 response_data = await response.json()
 # #                 check_details = response_data.get("data", {}).get("checkDetail", [])
@@ -450,7 +446,7 @@
 # # async def check_indiamart(session: aiohttp.ClientSession, mobile: str, event_logger: logging.Logger) -> str:
 # #     start_time = time.time()
 # #     event_logger.info(f"Starting IndiaMART check for {mobile}")
-    
+
 # #     try:
 # #         url = "https://utils.imimg.com/header/js/evaluate.php"
 # #         headers = {
@@ -460,7 +456,7 @@
 # #             "Origin": "https://buyer.indiamart.com",
 # #             "Referer": "https://buyer.indiamart.com/"
 # #         }
-        
+
 # #         payload = {
 # #             "username": mobile,
 # #             "iso": "IN",
@@ -476,11 +472,11 @@
 # #             "country": "India",
 # #             "service_code": "5"
 # #         }
-        
+
 # #         async with session.post(url, headers=headers, data=payload) as response:
 # #             response_time = time.time() - start_time
 # #             event_logger.info(f"IndiaMART API response time for {mobile}: {response_time:.2f}s")
-            
+
 # #             if response.status == 200:
 # #                 response_text = await response.text()
 # #                 try:
@@ -526,10 +522,10 @@
 # #     async def process_single_row(row):
 # #         uid = row["UID"]
 # #         mobile = str(row["Mobile"]).strip()
-        
+
 # #         validation_message, formatted_mobile = validate_and_format_mobile(row)
 # #         event_logger.info(validation_message)
-        
+
 # #         if formatted_mobile is None:
 # #             result = {
 # #                 "UID": uid,
@@ -546,7 +542,7 @@
 # #                 check_housing(session, formatted_mobile, event_logger),
 # #                 check_ajio(session, formatted_mobile, event_logger)
 # #             )
-            
+
 # #             result = {
 # #                 "UID": uid,
 # #                 "Mobile": formatted_mobile,
@@ -555,49 +551,49 @@
 # #                 "Housing": results[2],
 # #                 "AJIO": results[3]
 # #             }
-        
+
 # #         result_writer.add_result(result)
 # #         event_logger.info(f"Processed UID: {uid}, Mobile: {formatted_mobile}")
-    
+
 # #     await asyncio.gather(*(process_single_row(row) for _, row in batch.iterrows()))
 
 # # async def main():
 # #     event_logger, perf_logger = setup_logging()
 # #     perf_monitor = PerformanceMonitor(interval=5, perf_logger=perf_logger)
 # #     perf_monitor.start()
-    
+
 # #     output_file = f"results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
 # #     result_writer = ResultWriter(output_file)
 # #     result_writer.start()
-    
+
 # #     start_time = datetime.now()
 # #     event_logger.info("Starting process")
-    
+
 # #     try:
 # #         input_file = "new.xlsx"
 # #         data = pd.read_excel(input_file)
 # #         event_logger.info(f"Read {len(data)} rows from input file")
-        
+
 # #         timeout = aiohttp.ClientTimeout(total=300)
 # #         connector = aiohttp.TCPConnector(limit=50)
-        
+
 # #         batch_size = 50
 # #         batches = [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
-        
+
 # #         async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
 # #             for batch_num, batch in enumerate(batches, 1):
 # #                 event_logger.info(f"Processing batch {batch_num}/{len(batches)}")
 # #                 await process_batch(batch, session, event_logger, result_writer)
-    
+
 # #     except Exception as e:
 # #         event_logger.error(f"Error in main process: {str(e)}")
 # #     finally:
 # #         perf_monitor.stop()
 # #         perf_monitor.join()
-        
+
 # #         result_writer.stop()
 # #         result_writer.join()
-        
+
 # #         end_time = datetime.now()
 # #         elapsed_time = end_time - start_time
 # #         event_logger.info(f"Process completed. Total time: {elapsed_time}")
@@ -606,7 +602,6 @@
 
 # # if __name__ == "__main__":
 # #     asyncio.run(main())
-
 
 
 import re
@@ -629,6 +624,7 @@ proxies = {
     "http": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
     "https": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
 }
+
 
 def validate_and_format_mobile(uid, mobile):
     if not mobile or mobile.strip() == "":
@@ -669,6 +665,7 @@ async def check_toi(session, mobile):
         print(f"TOI API error for mobile {mobile}: {str(e)}")
         return "error"
 
+
 async def check_ajio(session, mobile):
     try:
         url = "https://login.web.ajio.com/api/auth/accountCheck"
@@ -676,19 +673,19 @@ async def check_ajio(session, mobile):
             "Content-Type": "application/json",
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
-            
+
         payload = {
             "mobileNumber": mobile
         }
-        
+
         async with session.post(url, headers=headers, json=payload) as response:
             print(f"AJIO status code for {mobile}: {response.status}")  # Debug print
-            
+
             if response.status == 200:
                 try:
                     response_data = await response.json()
                     print(f"AJIO Response for {mobile}: {response_data}")  # Debug print
-                    
+
                     is_success = response_data.get("success", False)
                     return "registered" if is_success else "unregistered"
                 except Exception as e:
@@ -697,11 +694,12 @@ async def check_ajio(session, mobile):
             else:
                 print(f"AJIO API error response: {await response.text()}")  # Debug print
                 return "error"
-                
+
     except Exception as e:
         print(f"AJIO API error for mobile {mobile}: {str(e)}")
         return "error"
-        
+
+
 async def check_housing(session, mobile):
     try:
         url = "https://mightyzeus-mum.housing.com/api/gql/network-only?apiName=CHECK_LOGIN_DETAIL&emittedFrom=client_buy_SRP&isBot=false&platform=desktop&source=web&source_name=AudienceWeb"
@@ -732,12 +730,12 @@ async def check_housing(session, mobile):
 
         async with session.post(url, headers=headers, json=payload) as response:
             print(f"Housing status code for {mobile}: {response.status}")
-            
+
             if response.status == 200:
                 try:
                     response_data = await response.json()
                     print(f"Housing Response for {mobile}: {response_data}")
-                    
+
                     check_details = response_data.get("data", {}).get("checkDetail", [])
                     if check_details and len(check_details) > 0:
                         status = check_details[0].get("status")
@@ -752,7 +750,8 @@ async def check_housing(session, mobile):
     except Exception as e:
         print(f"Housing API error for mobile {mobile}: {str(e)}")
         return "error"
-    
+
+
 async def check_indiamart(session, mobile):
     try:
         url = "https://utils.imimg.com/header/js/evaluate.php"
@@ -763,7 +762,7 @@ async def check_indiamart(session, mobile):
             "Origin": "https://buyer.indiamart.com",
             "Referer": "https://buyer.indiamart.com/"
         }
-        
+
         payload = {
             "username": mobile,
             "iso": "IN",
@@ -779,29 +778,21 @@ async def check_indiamart(session, mobile):
             "country": "India",
             "service_code": "5"
         }
-        
+
         async with session.post(url, headers=headers, data=payload, proxies=proxies) as response:
             if response.status == 200:
                 response_text = await response.text()
                 try:
                     response_data = json.loads(response_text)
-                    
-                    
-        
+
                     code = response_data.get("code")
-    
-         
-                    
-                    
-                    if code == "200" or code == 200 :
+
+                    if code == "200" or code == 200:
                         return "registered"
-                
-                    
-                    
+
                     if code == "204":
                         return "not registered"
 
-                    
                     return "error"
 
                 except json.JSONDecodeError as e:
@@ -817,14 +808,14 @@ async def check_indiamart(session, mobile):
 
 
 async def process_row(data, session):
-    uid = data["UID"]
-    mobile = data["Mobile"]
+    mobile = data
+    uid = "NA"
 
     validation_message, formatted_mobile = validate_and_format_mobile(uid, mobile)
     print(validation_message)
 
     if formatted_mobile is None:
-        redis_client.lpush("invalid_data", json.dumps({"UID": uid, "Mobile": mobile, "Status": "Invalid"}))
+        await redis_client.lpush("invalid_data", json.dumps({"UID": uid, "Mobile": mobile, "Status": "Invalid"}))
         return
 
     indiamart_status = await check_indiamart(session, formatted_mobile)
@@ -832,31 +823,37 @@ async def process_row(data, session):
     housing_status = await check_housing(session, formatted_mobile)
     ajio_status = await check_ajio(session, formatted_mobile)
 
-    print(f"UID: {uid}, Mobile: {formatted_mobile}, Indiamart: {indiamart_status}, TimesOfIndia: {toi_status}, Housing: {housing_status}, AJIO: {ajio_status}")
+    print(
+        f"UID: {uid}, Mobile: {formatted_mobile}, Indiamart: {indiamart_status}, TimesOfIndia: {toi_status}, Housing: {housing_status}, AJIO: {ajio_status}")
 
     # Push results to Redis lists
-    redis_client.lpush("indiamart_results", json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": indiamart_status}))
+    redis_client.lpush("indiamart_results",
+                       json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": indiamart_status}))
     redis_client.lpush("toi_results", json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": toi_status}))
-    redis_client.lpush("housing_results", json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": housing_status}))
-    redis_client.lpush("ajio_results", json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": ajio_status}))
+    redis_client.lpush("housing_results",
+                       json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": housing_status}))
+    redis_client.lpush("ajio_results",
+                       json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": ajio_status}))
+
 
 async def main():
-    timeout = aiohttp.ClientTimeout(total=300)  
-    connector = aiohttp.TCPConnector(limit=10)  
+    timeout = aiohttp.ClientTimeout(total=300)
+    connector = aiohttp.TCPConnector(limit=10)
 
     async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
         while True:
             # Fetch data from Redis list `mobile_data`
-            data_json = redis_client.brpop("mobile_data", timeout=30)  # Wait for data
+            data_json = redis_client.brpop("india_ajio_housing_toi_mobile_data", timeout=30)  # Wait for data
             if not data_json:
                 print("No more data to process. Exiting.")
                 break
 
             try:
                 data = json.loads(data_json[1])  # Parse JSON
-                await process_row(data, session)
+                await process_row(str(data), session)
             except Exception as e:
                 print(f"Error processing data: {e}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
