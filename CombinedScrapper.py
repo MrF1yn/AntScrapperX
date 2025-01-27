@@ -750,7 +750,8 @@ async def check_housing(session, mobile):
     except Exception as e:
         print(f"Housing API error for mobile {mobile}: {str(e)}")
         return "error"
-
+USERNAME = 'geonode_1VvZ28sUKX'
+PASSWORD = '3860618c-044d-4622-af4e-95200f09ce05'
 
 async def check_indiamart(session, mobile):
     try:
@@ -779,7 +780,8 @@ async def check_indiamart(session, mobile):
             "service_code": "5"
         }
 
-        async with session.post(url, headers=headers, data=payload) as response:
+        async with session.post(url, headers=headers, data=payload, proxy="http://premium-residential.geonode.com:9000",
+                                proxy_auth=aiohttp.BasicAuth(USERNAME, PASSWORD)) as response:
             if response.status == 200:
                 response_text = await response.text()
                 try:
