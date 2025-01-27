@@ -779,7 +779,7 @@ async def check_indiamart(session, mobile):
             "service_code": "5"
         }
 
-        async with session.post(url, headers=headers, data=payload, proxies=proxies) as response:
+        async with session.post(url, headers=headers, data=payload) as response:
             if response.status == 200:
                 response_text = await response.text()
                 try:
