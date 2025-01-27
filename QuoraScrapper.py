@@ -4,7 +4,8 @@ import csv
 import time
 
 import requests
-
+scrapper_id = random.randint(100000, 999999)
+start_time = int(time.time() * 1000)
 url = "https://www.quora.com/graphql/gql_para_POST?q=SignupEmailForm_validateEmail_Query"
 redis_client = redis.Redis(
     host='redis-19800.crce179.ap-south-1-1.ec2.redns.redis-cloud.com',
@@ -30,6 +31,8 @@ with open('quora_results.csv', mode='w', newline='', encoding='utf-8') as file:
         email = redis_client.brpop('quora', timeout=30)  # timeout=0 means it blocks indefinitely
         if not email:
             print("No more emails to process. Exiting.")
+            end_time = int(time.time() * 1000)
+            print(f"Runtime: {end_time - start_time}ms")
             break
         if email:
             email = email[1]  # Extracting the phone number and converting bytes to string
@@ -76,9 +79,9 @@ with open('quora_results.csv', mode='w', newline='', encoding='utf-8') as file:
                 status = "Present" if status == "IN_USE" else "Absent"
                 print(email, status)
                 writer.writerow([email, status])
-                redis_client.lpush("quora_results", f"{email},{status}")
+                redis_client.lpush("quora_results", f"{scrapper_id},{email},{status},TIME: {int(time.time() * 1000)}")
             except Exception as e:
                 print(f"Error processing number {email}: {str(e)}")
-                redis_client.lpush("quora_results", f"{email},Error")
+                redis_client.lpush("quora_results", f"{scrapper_id},{email},Error,TIME: {int(time.time() * 1000)}")
                 writer.writerow([email, "Error"])
     file.flush()
