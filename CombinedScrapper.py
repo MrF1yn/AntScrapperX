@@ -728,7 +728,8 @@ async def check_housing(session, mobile):
             }
         }
 
-        async with session.post(url, headers=headers, json=payload) as response:
+        async with session.post(url, headers=headers, json=payload, proxy="http://premium-residential.geonode.com:9000",
+                                proxy_auth=aiohttp.BasicAuth(USERNAME, PASSWORD)) as response:
             print(f"Housing status code for {mobile}: {response.status}")
 
             if response.status == 200:
