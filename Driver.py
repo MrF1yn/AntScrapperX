@@ -1,10 +1,9 @@
 import csv
 from urllib.parse import urlparse
-
+import psycopg2
 import redis
 import threading
 import time
-import mysql.connector
 
 # Redis connection setup
 redis_client = redis.Redis(
@@ -15,20 +14,13 @@ redis_client = redis.Redis(
     password="JMPog04EGI2MVcbO3HDPC9clDNyztfBX",
 )
 
-DATABASE_URL = "postgresql://postgres:qS1hAyZFcQFqrre6@db.lthjdpnfcewonemuleed.supabase.co:5432/postgres"
+# db_url = "postgresql://postgres:qS1hAyZFcQFqrre6@db.lthjdpnfcewonemuleed.supabase.co:5432/postgres"
+db_url = "postgresql://postgres.lthjdpnfcewonemuleed:qS1hAyZFcQFqrre6@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"
 
 # Parse the database URL
-db_url = urlparse(DATABASE_URL)
-mysql_conn = None
-# mysql_conn = mysql.connector.connect(
-#     host=db_url.hostname,
-#     port=db_url.port,
-#     user=db_url.username,
-#     password=db_url.password,
-#     database=db_url.path.lstrip('/'),
-# )
-# mysql_cursor = mysql_conn.cursor()
-mysql_cursor = None
+
+pg_conn = psycopg2.connect(db_url)
+pg_cursor = pg_conn.cursor()
 
 # Redis list names
 redis_lists_numbers = ['amazon', 'flipkart', 'whatsapp', "india_ajio_housing_toi_mobile_data"]
@@ -93,9 +85,11 @@ def push_to_redis(file_path, redis_lists):
 
 def process_redis_results():
     """
-    Continuously checks Redis lists for new results and updates them to MySQL when buffer size reaches 50.
+    Continuously checks Redis lists for new results and updates them to PostgreSQL when buffer size reaches 50 or after a timeout.
     """
     global results_buffer
+    last_flush_time = time.time()
+    flush_timeout = 10  # Timeout in seconds
 
     while True:
         for channel in redis_results_channels:
@@ -103,25 +97,30 @@ def process_redis_results():
                 result = redis_client.rpop(channel)
                 if result:
                     # Parse the Redis result (assuming key=value format)
-                    key, value = result.split(',', 1)
-
+                    scrapper_id, email, status, timestamp = result.split(',')
+                    print(f"Received result for {email}: {status} from {channel}")
+                    last_flush_time = time.time()
                     # Add to buffer
                     with buffer_lock:
-                        results_buffer.append((key, value + "," + channel))
+                        results_buffer.append((email, status + "," + channel))
 
-                    # If buffer reaches 50, insert into MySQL
+                    # If buffer reaches 50, insert into PostgreSQL
                     if len(results_buffer) >= 50:
-                        flush_to_mysql()
+                        flush_to_postgresql()
 
             except Exception as e:
                 print(f"Error processing Redis channel {channel}: {e}")
 
-        time.sleep(1)  # Avoid tight loop
+        # Check if the timeout has been reached
+        if time.time() - last_flush_time >= flush_timeout:
+            flush_to_postgresql()
+            last_flush_time = time.time()
 
+        # time.sleep(1)  # Avoid tight loop
 
-def flush_to_mysql():
+def flush_to_postgresql():
     """
-    Flushes the results buffer to the MySQL table, updating or inserting records as needed.
+    Flushes the results buffer to the PostgreSQL table, updating or inserting records as needed.
     """
     global results_buffer
 
@@ -138,43 +137,44 @@ def flush_to_mysql():
                     continue
 
                 status, channel = parts
+                channel = channel.replace("_results", "")
                 date = time.strftime('%Y-%m-%d %H:%M:%S')
 
                 # Check if the number exists in the table
-                mysql_cursor.execute("SELECT * FROM results WHERE numbers = %s", (key,))
-                existing_record = mysql_cursor.fetchone()
+                pg_cursor.execute("SELECT * FROM results WHERE numbers = %s", (key,))
+                existing_record = pg_cursor.fetchone()
 
                 if existing_record:
                     # Update the existing record
                     update_query = f"UPDATE results SET {channel} = %s, {channel}_date = %s WHERE numbers = %s"
-                    mysql_cursor.execute(update_query, (status, date, key))
+                    pg_cursor.execute(update_query, (status, date, key))
                     print(f"Updated {key} for channel {channel}")
                 else:
                     # Insert a new record
                     insert_query = "INSERT INTO results (numbers, {channel}, {channel}_date) VALUES (%s, %s, %s)"
-                    formatted_query = insert_query.format(channel)
-                    mysql_cursor.execute(formatted_query, (key, status, date))
+                    formatted_query = insert_query.format(channel=channel)
+                    pg_cursor.execute(formatted_query, (key, status, date))
                     print(f"Inserted new record for {key} with channel {channel}")
 
             # Commit the changes
-            mysql_conn.commit()
+            pg_conn.commit()
             print(f"Processed {len(results_buffer)} rows.")
 
             # Clear the buffer
             results_buffer = []
 
-        except mysql.connector.Error as e:
-            print(f"MySQL error: {e}")
+        except psycopg2.Error as e:
+            print(f"PostgreSQL error: {e}")
 
 
 if __name__ == "__main__":
     # Start the Redis monitoring thread
-    # redis_thread = threading.Thread(target=process_redis_results, daemon=True)
-    # redis_thread.start()
+    redis_thread = threading.Thread(target=process_redis_results, daemon=True)
+    redis_thread.start()
 
     # Example usage
-    push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
-    push_to_redis("emails-csv.csv", redis_lists_emails)
+    # push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
+    # push_to_redis("emails-csv.csv", redis_lists_emails)
 
     # Keep the main thread alive
     while True:
