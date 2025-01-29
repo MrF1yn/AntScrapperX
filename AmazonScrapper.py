@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 scrapper_id = random.randint(100000, 999999)
 start_time = int(time.time() * 1000)
 # Redis connection setup
@@ -25,20 +26,14 @@ USER_AGENTS = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",
 ]
 
-proxy_username = "acumensa2"
-proxy_password = "Acumensa321_streaming-1"
-proxy_address = "geo.iproyal.com"
-proxy_port = "12321"
-
 # formulate the proxy url with authentication
-proxy_url = f"http://{proxy_username}:{proxy_password}@{proxy_address}:{proxy_port}"
-
+proxies = {
+    "http": f"http://geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
+    "https": f"http://geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
+}
 # set selenium-wire options to use the proxy
 seleniumwire_options = {
-    "proxy": {
-        "http": proxy_url,
-        "https": proxy_url
-    },
+    "proxy": proxies,
 }
 
 # set Chrome options to run in headless mode
@@ -46,17 +41,19 @@ options = Options()
 options.add_argument("--log-level=3")
 options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
 options.add_argument("--headless")
-options.add_argument("--window-size=1200,500")
+options.add_argument("--disable-gpu")
+options.add_argument('--no-sandbox')
+options.add_argument("--window-size=1920,1080")
 # initialize the Chrome driver with service, selenium-wire options, and chrome options
 driver = webdriver.Chrome(
-    # seleniumwire_options=seleniumwire_options,
+    seleniumwire_options=seleniumwire_options,
     options=options
 )
 # Configure WebDriver
 
 
 # Timeout settings
-timeout = 10
+timeout = 30
 
 # CSV file setup
 output_file = "amazon_results.csv"
@@ -70,7 +67,7 @@ with open(output_file, mode="w", newline="") as file:
         WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         # Click the Signup button
         signup_button = WebDriverWait(driver, timeout).until(
-            EC.presence_of_element_located((By.XPATH, "//a[@data-nav-role='signin']"))
+            EC.element_to_be_clickable((By.XPATH, "//a[@data-nav-role='signin']"))
         )
         signup_button.click()
         time.sleep(1)
@@ -91,9 +88,11 @@ with open(output_file, mode="w", newline="") as file:
 
                 # Enter the phone number
                 phone_input = WebDriverWait(driver, timeout).until(
-                    EC.presence_of_element_located((By.XPATH, "//input[@id='ap_email']"))
+                    EC.element_to_be_clickable((By.XPATH, "//input[@id='ap_email']"))
                 )
+                time.sleep(0.2)
                 phone_input.clear()
+                time.sleep(0.4)
                 phone_input.send_keys(phone_number)
 
                 # Click the Continue button

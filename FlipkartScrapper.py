@@ -41,6 +41,7 @@ options.add_argument("--log-level=3")
 options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
 # options.add_argument(f"--user-data-dir=/tmp/chrome-data")
 options.add_argument("--headless")
+options.add_argument("--window-size=1920,1080")
   # Unique user data directory
 
 # Replace `webdriver.Chrome()` with the appropriate WebDriver instance if you're not using Chrome
