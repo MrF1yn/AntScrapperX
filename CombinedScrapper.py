@@ -4,7 +4,7 @@
 # import aiohttp
 # import json
 # from datetime import datetime
-
+import random
 # proxies = {
 #     "http": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
 #     "https": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
@@ -606,11 +606,14 @@
 
 import re
 import asyncio
+import time
+
 import aiohttp
 import json
 import redis
 from datetime import datetime
-
+scrapper_id = random.randint(100000, 999999)
+start_time = int(time.time() * 1000)
 # Initialize Redis client
 redis_client = redis.Redis(
     host='redis-19800.crce179.ap-south-1-1.ec2.redns.redis-cloud.com',
@@ -621,8 +624,8 @@ redis_client = redis.Redis(
 )
 
 proxies = {
-    "http": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
-    "https": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
+    "http": f"geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:{random.randint(9000, 9010)}",
+    "https": f"geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:{random.randint(9000, 9010)}",
 }
 
 
@@ -678,7 +681,7 @@ async def check_ajio(session, mobile):
             "mobileNumber": mobile
         }
 
-        async with session.post(url, headers=headers, json=payload) as response:
+        async with session.post(url, headers=headers, json=payload, timeout=15) as response:
             print(f"AJIO status code for {mobile}: {response.status}")  # Debug print
 
             if response.status == 200:
@@ -831,12 +834,12 @@ async def process_row(data, session):
 
     # Push results to Redis lists
     redis_client.lpush("indiamart_results",
-                       json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": indiamart_status}))
-    redis_client.lpush("toi_results", json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": toi_status}))
+                       f"{scrapper_id},{formatted_mobile},{indiamart_status},{int(time.time() * 1000)}")
+    redis_client.lpush("toi_results", f"{scrapper_id},{formatted_mobile},{toi_status},{int(time.time() * 1000)}")
     redis_client.lpush("housing_results",
-                       json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": housing_status}))
+                       f"{scrapper_id},{formatted_mobile},{housing_status},{int(time.time() * 1000)}")
     redis_client.lpush("ajio_results",
-                       json.dumps({"UID": uid, "Mobile": formatted_mobile, "Status": ajio_status}))
+                       f"{scrapper_id},{formatted_mobile},{ajio_status},{int(time.time() * 1000)}")
 
 
 async def main():
@@ -849,6 +852,8 @@ async def main():
             data_json = redis_client.brpop("india_ajio_housing_toi_mobile_data", timeout=30)  # Wait for data
             if not data_json:
                 print("No more data to process. Exiting.")
+                end_time = int(time.time() * 1000)
+                print(f"Runtime: {end_time - start_time}ms")
                 break
 
             try:

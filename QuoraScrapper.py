@@ -17,8 +17,8 @@ redis_client = redis.Redis(
 )
 
 proxies = {
-    "http": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
-    "https": "geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:9000",
+    "http": f"geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:{random.randint(9000, 9010)}",
+    "https": f"geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:{random.randint(9000, 9010)}",
 }
 
 headers = {

@@ -1,9 +1,6 @@
-import os
+import threading
 import subprocess
 import redis
-import threading
-
-# Initialize Redis client
 redis_client = redis.Redis(
     host='redis-19800.crce179.ap-south-1-1.ec2.redns.redis-cloud.com',
     port=19800,
@@ -11,6 +8,8 @@ redis_client = redis.Redis(
     username="default",
     password="JMPog04EGI2MVcbO3HDPC9clDNyztfBX",
 )
+
+# Initialize Redis client
 # Dictionary to keep track of running processes
 processes = {}
 
