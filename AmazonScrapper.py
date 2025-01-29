@@ -53,7 +53,7 @@ driver = webdriver.Chrome(
 
 
 # Timeout settings
-timeout = 30
+timeout = 10
 
 # CSV file setup
 output_file = "amazon_results.csv"
@@ -92,7 +92,7 @@ with open(output_file, mode="w", newline="") as file:
                 )
                 time.sleep(0.2)
                 phone_input.clear()
-                time.sleep(0.4)
+                time.sleep(0.2)
                 phone_input.send_keys(phone_number)
 
                 # Click the Continue button
@@ -118,7 +118,7 @@ with open(output_file, mode="w", newline="") as file:
                     present = 0
 
                 print(f"Number {phone_number}: {status}: {popup_html}")
-                redis_client.lpush("amazon_results", f"{scrapper_id}{phone_number},{status},{int(time.time() * 1000)}")
+                redis_client.lpush("amazon_results", f"{scrapper_id},{phone_number},{status},{int(time.time() * 1000)}")
             except Exception as e:
                 print(f"Error processing number {phone_number}: {e}")
                 try:

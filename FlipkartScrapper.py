@@ -8,7 +8,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+scrapper_id = random.randint(100000, 999999)
+start_time = int(time.time() * 1000)
 
 def set_viewport_size(driver, width, height):
     window_size = driver.execute_script("""
@@ -41,6 +42,8 @@ options.add_argument("--log-level=3")
 options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
 # options.add_argument(f"--user-data-dir=/tmp/chrome-data")
 options.add_argument("--headless")
+options.add_argument("--disable-gpu")
+options.add_argument('--no-sandbox')
 options.add_argument("--window-size=1920,1080")
   # Unique user data directory
 
@@ -67,6 +70,8 @@ with open('flipkart_results.csv', mode='w', newline='', encoding='utf-8') as fil
         phone_number = redis_client.brpop('flipkart', timeout=30)  # timeout=0 means it blocks indefinitely
         if not phone_number:
             print("No more numbers to process. Exiting.")
+            end_time = int(time.time() * 1000)
+            print(f"Runtime: {end_time - start_time}ms")
             break
         if phone_number:  # phone_number is a tuple, e.g., (key, value)
             phone_number = phone_number[1]  # Extracting the phone number and converting bytes to string
@@ -93,15 +98,15 @@ with open('flipkart_results.csv', mode='w', newline='', encoding='utf-8') as fil
 
                 if "Signup" in popup.text:
                     print(f"Number {phone_number}: Absent")
-                    redis_client.lpush("flipkart_results", f"{phone_number},Absent")
+                    redis_client.lpush("flipkart_results", f"{scrapper_id},{phone_number},Absent,{int(time.time() * 1000)}")
                     present = 0
                 elif "OTP" in popup.text:
                     print(f"Number {phone_number}: Present")
-                    redis_client.lpush("flipkart_results", f"{phone_number},Present")
+                    redis_client.lpush("flipkart_results", f"{scrapper_id},{phone_number},Present,{int(time.time() * 1000)}")
                     present = 1
                 elif "valid" in popup.text:
                     print(f"Number {phone_number}: Invalid")
-                    redis_client.lpush("flipkart_results", f"{phone_number},Invalid")
+                    redis_client.lpush("flipkart_results", f"{scrapper_id},{phone_number},Invalid,{int(time.time() * 1000)}")
                     present = 2
 
                 # Save result to CSV
