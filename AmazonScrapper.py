@@ -8,7 +8,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+scrapper_id = random.randint(100000, 999999)
+start_time = int(time.time() * 1000)
 # Redis connection setup
 redis_client = redis.Redis(
     host='redis-19800.crce179.ap-south-1-1.ec2.redns.redis-cloud.com',
@@ -78,6 +79,8 @@ with open(output_file, mode="w", newline="") as file:
             result = redis_client.brpop("amazon", timeout=30)  # Adjust the timeout as needed
             if not result:
                 print("No more numbers to process. Exiting.")
+                end_time = int(time.time() * 1000)
+                print(f"Runtime: {end_time - start_time}ms")
                 break
 
             phone_number = result[1]  # Decode the number from bytes
@@ -116,7 +119,7 @@ with open(output_file, mode="w", newline="") as file:
                     present = 0
 
                 print(f"Number {phone_number}: {status}: {popup_html}")
-                redis_client.lpush("amazon_results", f"{phone_number},{status}")
+                redis_client.lpush("amazon_results", f"{scrapper_id}{phone_number},{status},{int(time.time() * 1000)}")
             except Exception as e:
                 print(f"Error processing number {phone_number}: {e}")
                 try:
@@ -135,7 +138,7 @@ with open(output_file, mode="w", newline="") as file:
                     except:
                         pass
                     pass
-                redis_client.lpush("amazon_results", f"{phone_number},Error")
+                redis_client.lpush("amazon_results", f"{scrapper_id},{phone_number},Error,{int(time.time() * 1000)}")
 
             finally:
                 # Close the popup
