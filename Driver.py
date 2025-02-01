@@ -15,7 +15,8 @@ redis_client = redis.Redis(
 )
 
 # db_url = "postgresql://postgres:qS1hAyZFcQFqrre6@db.lthjdpnfcewonemuleed.supabase.co:5432/postgres"
-db_url = "postgresql://postgres.lthjdpnfcewonemuleed:qS1hAyZFcQFqrre6@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"
+# db_url = "postgresql://postgres.lthjdpnfcewonemuleed:qS1hAyZFcQFqrre6@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"
+db_url = "postgresql://postgres.ufgcfatyimxxhsnrmtzf:W0j4re9WW8kEtUbm@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"
 
 # Parse the database URL
 

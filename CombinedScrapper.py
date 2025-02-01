@@ -731,7 +731,7 @@ async def check_housing(session, mobile):
             }
         }
 
-        async with session.post(url, headers=headers, json=payload, proxy="http://premium-residential.geonode.com:9000",
+        async with session.post(url, headers=headers, json=payload, proxy=f"http://premium-residential.geonode.com:{random.randint(9000, 9010)}",
                                 proxy_auth=aiohttp.BasicAuth(USERNAME, PASSWORD)) as response:
             print(f"Housing status code for {mobile}: {response.status}")
 
@@ -784,7 +784,7 @@ async def check_indiamart(session, mobile):
             "service_code": "5"
         }
 
-        async with session.post(url, headers=headers, data=payload, proxy="http://premium-residential.geonode.com:9000",
+        async with session.post(url, headers=headers, data=payload, proxy=f"http://premium-residential.geonode.com:{random.randint(9000, 9010)}",
                                 proxy_auth=aiohttp.BasicAuth(USERNAME, PASSWORD)) as response:
             if response.status == 200:
                 response_text = await response.text()

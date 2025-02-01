@@ -56,7 +56,7 @@ async def fetch_email_status(session, email):
             "hash": "1db80096407be846d5581fe1b42b12fd05e0b40a5d3095ed40a0b4bd28f49fe7"
         }
     }
-    async with session.post(url, headers=headers, json=payload,proxy="http://premium-residential.geonode.com:9000",
+    async with session.post(url, headers=headers, json=payload,proxy=f"http://premium-residential.geonode.com:{random.randint(9000, 9010)}",
                                 proxy_auth=aiohttp.BasicAuth(USERNAME, PASSWORD)) as response:
         return await response.json()
 
