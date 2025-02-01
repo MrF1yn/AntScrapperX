@@ -20,6 +20,9 @@ def run_scrapper(scrapper_name):
     elif scrapper_name == 'flipkart':
         print("Running Flipkart scrapper")
         process = subprocess.Popen(['python', 'FlipkartScrapper.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    elif scrapper_name == 'microsoft':
+        print("Running Microsoft scrapper")
+        process = subprocess.Popen(['python', 'MicrosoftNumber.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     elif scrapper_name == 'quora':
         print("Running Quora scrapper")
         process = subprocess.Popen(['python', 'QuoraScrapper.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)

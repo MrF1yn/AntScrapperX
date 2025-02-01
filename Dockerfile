@@ -41,6 +41,7 @@ COPY FlipkartScrapper.py /app/
 COPY QuoraScrapper.py /app/
 COPY CombinedScrapper.py /app/
 COPY AmazonScrapper.py /app/
+COPY MicrosoftNumber.py /app/
 COPY Dependencies.py /app/
 COPY Runner.py /app/
 COPY requirements.txt /app/

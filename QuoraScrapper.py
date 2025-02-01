@@ -17,8 +17,8 @@ redis_client = redis.Redis(
 )
 
 proxies = {
-    "http": f"geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:{random.randint(9000, 9010)}",
-    "https": f"geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@92.204.164.15:{random.randint(9000, 9010)}",
+    "http": f"geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@premium-residential.geonode.com:{random.randint(9000, 9010)}",
+    "https": f"geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@premium-residential.geonode.com:{random.randint(9000, 9010)}",
 }
 
 headers = {
@@ -44,7 +44,8 @@ headers = {
     "sec-fetch-site": "same-origin",
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 }
-
+USERNAME = 'geonode_1VvZ28sUKX'
+PASSWORD = '3860618c-044d-4622-af4e-95200f09ce05'
 async def fetch_email_status(session, email):
     payload = {
         "queryName": "SignupEmailForm_validateEmail_Query",
@@ -55,7 +56,8 @@ async def fetch_email_status(session, email):
             "hash": "1db80096407be846d5581fe1b42b12fd05e0b40a5d3095ed40a0b4bd28f49fe7"
         }
     }
-    async with session.post(url, headers=headers, json=payload) as response:
+    async with session.post(url, headers=headers, json=payload,proxy="http://premium-residential.geonode.com:9000",
+                                proxy_auth=aiohttp.BasicAuth(USERNAME, PASSWORD)) as response:
         return await response.json()
 
 async def process_emails():

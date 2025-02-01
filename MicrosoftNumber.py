@@ -1,4 +1,6 @@
+import random
 
+import redis
 # from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
 # from selenium.webdriver.common.by import By
@@ -306,13 +308,20 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import pandas as pd
 import time
 import os
 import csv
 from datetime import datetime
 import logging
-
+redis_client = redis.Redis(
+    host='redis-19800.crce179.ap-south-1-1.ec2.redns.redis-cloud.com',
+    port=19800,
+    decode_responses=True,
+    username="default",
+    password="JMPog04EGI2MVcbO3HDPC9clDNyztfBX",
+)
+scrapper_id = random.randint(100000, 999999)
+start_time = int(time.time() * 1000)
 def setup_logging():
     # Create logs directory if it doesn't exist
     log_dir = 'logs-for-ms-phone'
@@ -352,29 +361,31 @@ def automate_login():
     total_start_time = time.time()
     
     # Read the Excel file
-    try:
-        df = pd.read_excel('newest_file.xlsx')
-        phone_numbers = df.iloc[:, 1]  # Get the second column
-        event_logger.info(f"Successfully loaded {len(phone_numbers)} phone numbers from Excel file")
-    except Exception as e:
-        event_logger.error(f"Error reading Excel file: {e}")
-        return
+
 
     base_url = "https://login.live.com/oauth20_authorize.srf?client_id=10fa57ef-4895-4ab2-872c-8c3613d4f7fb&scope=openid+profile+offline_access&redirect_uri=https%3a%2f%2fwww.microsoft.com%2fcascadeauth%2faccount%2fsignin-oidc&response_type=code&state=CfDJ8P_pstto1o1NgBRsh8q_VvgvqWKhxZdI81K25oM8gmERnioSSdh9iuv0vjmREgCRbiy8r74WXotHr4O35waOBittPOzY3Q_8wYPiYyAunKlBbh295ELggk8jqRPftfgQ2zsfMTjrZH-YXD0wwdJJ2rG7wo25K5YgS-hm-p-LS2FqwXQ91u5HQELz49fdVoQUoN90pdlveWuW9HDDjtbxbUBki8edIrdV6C6fQ0rA1E0ElzrAx-qMqWAkxINv1LJl7UUPBQkSNaixJy_eAp3-iMnQwvSwqmQmse2uOYskX9Ft04K9bsbrhoGcNhsyGBQIf5UD9OuvlEB1ksVptk4IN8WjapmTJN4gea9IFH4Vmx2VIOCRPC0kRFRP-ia383Q8LwW9DPHMSZkRqegny7b3A0XosrAURFTjr1AgEF73aXpcrWIzX_f6Xw1IRkRs2tp0OTXxdx_8VFX2oMRGt8kSg6lbuZyNJ08LK5i4q6PUkyQ3&response_mode=form_post&nonce=638729619076581239.MzI2NjdmZjktZGMzOC00NDMzLWIzNjctZGM2ZDk0ZTEyMWRlNjliYWNkN2YtYzBjNS00MDc5LWIzOTQtOGVkNGFmMGJhNDI5&code_challenge=UMUyHY-guXMrUIT13TLHAnhjDAO0nZPIZLusPUnLGFg&code_challenge_method=S256&x-client-SKU=ID_NET6_0&x-client-Ver=8.1.0.0&uaid=550bed0a33eb420bbc27778898d9332a&msproxy=1&issuer=mso&tenant=consumers&ui_locales=en-IN&client_info=1&epct=PAQABDgEAAABVrSpeuWamRam2jAF1XRQERjrsj7RynFvC5_IfzZqUCtDxodorVkPNtymgDnENBVKevVs9PHNq2G0C2qDNrLKy7u8tOrSsXpYJjMqaSqr-dkRRqC0cWLFxMlVqp_mhyldXBjlYiIy-aaFlBWS69r1bVF6gvt-rRN9lYDP0p_xAseDQ1XCLQ2Fls3N6nK_aZZDcWc1o6Yq9-aBwuxL7irAHDUFs3VplwARjiZl7Nvpt5yAA&jshs=0&claims=%7b%22compact%22%3a%7b%22name%22%3a%7b%22essential%22%3atrue%7d%7d%7d#"
 
-    for index, phone_number in enumerate(phone_numbers, 1):
+    while True:
+        phone_number = redis_client.brpop('microsoft', timeout=30)
+        if not phone_number:
+            print("No more numbers to process. Exiting.")
+            break
+
+        phone_number = phone_number[1]
         # Record start time for this phone number
         start_time = time.time()
         
-        event_logger.info(f"Processing number {index}/{len(phone_numbers)}: {phone_number}")
+        event_logger.info(f"Processing number {phone_number}")
         
         # Setup Chrome driver with headless mode
         chrome_options = Options()
+        chrome_options.add_argument("--log-level=3")
+        # options.add_argument(f"user-agent={random.choice(USER_AGENTS)}")
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument("--window-size=1920,1080")
+        status = "Unknown"
         driver = webdriver.Chrome(options=chrome_options)
         wait = WebDriverWait(driver, 10)
 
@@ -397,17 +408,19 @@ def automate_login():
             # Try to capture the response message
             status = "Unknown"
             response_text = "Unable to determine response"
-            
+            print(f"Processing phone number: {phone_number}")
             try:
                 page_text = driver.find_element(By.TAG_NAME, "body").text
                 status = "Processed"
                 response_text = page_text[:200]
                 event_logger.info(f"Response received for {phone_number}: {response_text[:100]}...")
+                print(f"Response received for {phone_number}: {response_text[:100]}...")
             except:
                 try:
                     response_text = driver.find_element(By.ID, "displayName").text
                     status = "Account Found"
                     event_logger.info(f"Account found for {phone_number}: {response_text}")
+
                 except:
                     status = "No Response"
                     event_logger.warning(f"Unable to determine response for {phone_number}")
@@ -420,11 +433,12 @@ def automate_login():
             # Calculate processing time
             processing_time = time.time() - start_time
             perf_logger.info(f"Phone {phone_number} - Processing time: {processing_time:.2f} seconds")
-            
+            redis_client.lpush("microsoft_results", f"{scrapper_id},{phone_number},{status},{int(time.time() * 1000)}")
             # Save results to CSV
-            with open(results_file, 'a', newline='') as f:
-                writer = csv.writer(f)
-                writer.writerow([phone_number, status, response_text, f"{processing_time:.2f}s"])
+            # with open(results_file, 'a', newline='') as f:
+            #     # writer = csv.writer(f)
+            #     # writer.writerow([phone_number, status, response_text, f"{processing_time:.2f}s"])
+            #
             
             # Close the browser
             driver.quit()
