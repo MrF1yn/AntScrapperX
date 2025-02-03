@@ -10,4 +10,4 @@ def run_script(script_name):
 
 
 run_script('Dependencies.py')
-run_script('EnvDriver.py')
+run_script('EnvDriverBot.py')

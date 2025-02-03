@@ -177,8 +177,8 @@ if __name__ == "__main__":
     redis_thread.start()
 
     # Example usage
-    # push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
-    # push_to_redis("emails-csv.csv", redis_lists_emails)
+    push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
+    push_to_redis("emails-csv.csv", redis_lists_emails)
 
     # Keep the main thread alive
     while True:

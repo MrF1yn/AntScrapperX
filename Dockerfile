@@ -1,5 +1,5 @@
 # Use the official Python 3.12 image as the base
-FROM python:3.12-slim
+FROM selenium/standalone-chrome:latest
 
 ## Set environment variables
 ENV PYTHONUNBUFFERED=1
@@ -29,12 +29,12 @@ ENV PYTHONUNBUFFERED=1
 #
 ## Set the working directory
 WORKDIR /app
-RUN chmod -R 777 /app
+RUN sudo chmod -R 777 /app
 RUN mkdir -p /tmp/chrome-data && \
     chmod -R 777 /tmp/chrome-data
-#RUN sudo apt update -y
-#RUN sudo apt install python3.12-venv -y
-COPY EnvDriver.py /app/
+RUN sudo apt update -y
+RUN sudo apt install python3.12-venv -y
+COPY EnvDriverBot.py /app/
 COPY Driver.py /app/
 COPY AmazonScrapper.py /app/
 COPY FlipkartScrapper.py /app/
