@@ -25,9 +25,10 @@ pg_cursor = pg_conn.cursor()
 
 # Redis list names
 redis_lists_numbers = ['amazon', 'flipkart', 'whatsapp', "india_ajio_housing_toi_mobile_data", "microsoft"]
-redis_lists_emails = ['quora']
+redis_lists_emails = ['quora',  "microsoft_email"]
 redis_lists_numbers_extras = ["indiamart", "housing", "toi", "ajio"]
-redis_results_channels = [f"{channel}_results" for channel in redis_lists_numbers + redis_lists_emails + redis_lists_numbers_extras]
+redis_results_channels = [f"{channel}_results" for channel in
+                          redis_lists_numbers + redis_lists_emails + redis_lists_numbers_extras]
 
 # Array to store results before MySQL insertion
 results_buffer = []
@@ -119,6 +120,7 @@ def process_redis_results():
             last_flush_time = time.time()
 
         # time.sleep(1)  # Avoid tight loop
+
 
 def flush_to_postgresql():
     """
