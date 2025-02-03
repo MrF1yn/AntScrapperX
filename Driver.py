@@ -24,7 +24,7 @@ pg_conn = psycopg2.connect(db_url)
 pg_cursor = pg_conn.cursor()
 
 # Redis list names
-redis_lists_numbers = ['amazon', 'flipkart', 'whatsapp', "india_ajio_housing_toi_mobile_data", "microsoft"]
+redis_lists_numbers = ['amazon', 'flipkart', 'whatsapp', "india_ajio_housing_toi_mobile_data", "microsoft_number"]
 redis_lists_emails = ['quora',  "microsoft_email"]
 redis_lists_numbers_extras = ["indiamart", "housing", "toi", "ajio"]
 redis_results_channels = [f"{channel}_results" for channel in
@@ -92,7 +92,7 @@ def process_redis_results():
     """
     global results_buffer
     last_flush_time = time.time()
-    flush_timeout = 10  # Timeout in seconds
+    flush_timeout = 30  # Timeout in seconds
 
     while True:
         for channel in redis_results_channels:
@@ -177,8 +177,8 @@ if __name__ == "__main__":
     redis_thread.start()
 
     # Example usage
-    push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
-    push_to_redis("emails-csv.csv", redis_lists_emails)
+    # push_to_redis("phone-numbers-csv.csv", redis_lists_numbers)
+    # push_to_redis("emails-csv.csv", redis_lists_emails)
 
     # Keep the main thread alive
     while True:

@@ -28,8 +28,8 @@ USER_AGENTS = [
 
 # formulate the proxy url with authentication
 proxies = {
-    "http": f"http://geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@premium-residential.geonode.com:9000",
-    "https": f"http://geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@premium-residential.geonode.com:9000",
+    "http": f"http://geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@premium-residential.geonode.com:9002",
+    "https": f"http://geonode_1VvZ28sUKX:3860618c-044d-4622-af4e-95200f09ce05@premium-residential.geonode.com:9002",
 }
 # set selenium-wire options to use the proxy
 seleniumwire_options = {
