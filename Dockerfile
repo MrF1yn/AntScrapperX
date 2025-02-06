@@ -42,6 +42,8 @@ COPY QuoraScrapper.py /app/
 COPY CombinedScrapper.py /app/
 COPY AmazonScrapper.py /app/
 COPY MicrosoftNumber.py /app/
+COPY MicrosoftEmail.py /app/
+COPY Skype.py /app/
 COPY Dependencies.py /app/
 COPY Runner.py /app/
 COPY requirements.txt /app/

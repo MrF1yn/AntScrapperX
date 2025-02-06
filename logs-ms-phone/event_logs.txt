@@ -1,0 +1,140 @@
+2025-02-07 00:27:13,166 - INFO - Initializing Chrome for worker 1
+2025-02-07 00:28:59,089 - INFO - Initializing Chrome for worker 1
+2025-02-07 00:29:05,419 - INFO - Initializing Chrome for worker 1
+2025-02-07 00:29:06,930 - INFO - Attempting login
+2025-02-07 00:29:24,937 - INFO - Login successful
+2025-02-07 00:29:24,937 - INFO - Attempting to initialize search
+2025-02-07 00:29:31,038 - INFO - Search initialized successfully using main selector
+2025-02-07 00:29:31,038 - INFO - Searching for contact: dey.chandan1979@gmail.com
+2025-02-07 00:29:38,203 - INFO - Found 1 search results
+2025-02-07 00:29:38,203 - INFO - Found 1 results for dey.chandan1979@gmail.com
+2025-02-07 00:29:38,204 - INFO - Search history saved successfully
+2025-02-07 00:29:38,268 - INFO - Searching for contact: accounts.delhi@infodriveindia.com
+2025-02-07 00:29:45,461 - INFO - Found 1 search results
+2025-02-07 00:29:45,462 - INFO - Found 1 results for accounts.delhi@infodriveindia.com
+2025-02-07 00:29:45,462 - INFO - Search history saved successfully
+2025-02-07 00:29:45,526 - INFO - Searching for contact: oail@oceanagro.com
+2025-02-07 00:29:52,620 - INFO - Found 1 search results
+2025-02-07 00:29:52,621 - INFO - Found 1 results for oail@oceanagro.com
+2025-02-07 00:29:52,621 - INFO - Search history saved successfully
+2025-02-07 00:29:52,685 - INFO - Searching for contact: bkkp12@gmail.com
+2025-02-07 00:29:59,798 - INFO - Found 1 search results
+2025-02-07 00:29:59,798 - INFO - Found 1 results for bkkp12@gmail.com
+2025-02-07 00:29:59,798 - INFO - Search history saved successfully
+2025-02-07 00:29:59,863 - INFO - Searching for contact: dppl_6819@yahoo.co.in
+2025-02-07 00:30:07,025 - INFO - Found 1 search results
+2025-02-07 00:30:07,025 - INFO - Found 1 results for dppl_6819@yahoo.co.in
+2025-02-07 00:30:07,026 - INFO - Search history saved successfully
+2025-02-07 00:30:07,092 - INFO - Searching for contact: gen.admin@boyestumi.in
+2025-02-07 00:30:14,217 - INFO - Found 1 search results
+2025-02-07 00:30:14,218 - INFO - Found 1 results for gen.admin@boyestumi.in
+2025-02-07 00:30:14,218 - INFO - Search history saved successfully
+2025-02-07 00:30:14,282 - INFO - Searching for contact: vintechpoly@gmail.com
+2025-02-07 00:30:21,437 - INFO - Found 1 search results
+2025-02-07 00:30:21,437 - INFO - Found 1 results for vintechpoly@gmail.com
+2025-02-07 00:30:21,437 - INFO - Search history saved successfully
+2025-02-07 00:30:21,501 - INFO - Searching for contact: sanabinay@gmail.com
+2025-02-07 00:30:28,676 - INFO - Found 1 search results
+2025-02-07 00:30:28,676 - INFO - Found 1 results for sanabinay@gmail.com
+2025-02-07 00:30:28,676 - INFO - Search history saved successfully
+2025-02-07 00:30:28,741 - INFO - Searching for contact: himanshu.srivastava@thebirdgroup.com
+2025-02-07 00:30:35,865 - INFO - Found 1 search results
+2025-02-07 00:30:35,865 - INFO - Found 1 results for himanshu.srivastava@thebirdgroup.com
+2025-02-07 00:30:35,866 - INFO - Search history saved successfully
+2025-02-07 00:30:35,929 - INFO - Searching for contact: dhiraj@tatanykshipping.com
+2025-02-07 00:30:43,055 - INFO - Found 1 search results
+2025-02-07 00:30:43,056 - INFO - Found 1 results for dhiraj@tatanykshipping.com
+2025-02-07 00:30:43,056 - INFO - Search history saved successfully
+2025-02-07 00:30:43,121 - INFO - Searching for contact: rathincdel@yahoo.co.in
+2025-02-07 00:30:50,288 - INFO - Found 1 search results
+2025-02-07 00:30:50,289 - INFO - Found 1 results for rathincdel@yahoo.co.in
+2025-02-07 00:30:50,289 - INFO - Search history saved successfully
+2025-02-07 00:30:50,353 - INFO - Searching for contact: theunitedengg@gmail.com
+2025-02-07 00:30:57,463 - INFO - Found 1 search results
+2025-02-07 00:30:57,464 - INFO - Found 1 results for theunitedengg@gmail.com
+2025-02-07 00:30:57,464 - INFO - Search history saved successfully
+2025-02-07 00:30:57,528 - INFO - Searching for contact: Manish.Singh@fonterrafuture.in
+2025-02-07 00:31:04,660 - INFO - Found 1 search results
+2025-02-07 00:31:04,661 - INFO - Found 1 results for Manish.Singh@fonterrafuture.in
+2025-02-07 00:31:04,661 - INFO - Search history saved successfully
+2025-02-07 00:31:04,725 - INFO - Searching for contact: anuresh.chauhan@gmail.com
+2025-02-07 00:31:11,888 - INFO - Found 1 search results
+2025-02-07 00:31:11,888 - INFO - Found 1 results for anuresh.chauhan@gmail.com
+2025-02-07 00:31:11,888 - INFO - Search history saved successfully
+2025-02-07 00:31:11,952 - INFO - Searching for contact: accts@fortunerealty.in
+2025-02-07 00:31:19,055 - INFO - Found 1 search results
+2025-02-07 00:31:19,056 - INFO - Found 1 results for accts@fortunerealty.in
+2025-02-07 00:31:19,056 - INFO - Search history saved successfully
+2025-02-07 00:31:19,121 - INFO - Searching for contact: bandyos@asgbiochem.com
+2025-02-07 00:31:26,238 - INFO - Found 1 search results
+2025-02-07 00:31:26,239 - INFO - Found 1 results for bandyos@asgbiochem.com
+2025-02-07 00:31:26,239 - INFO - Search history saved successfully
+2025-02-07 00:31:26,303 - INFO - Searching for contact: ca.pawan@gmail.com
+2025-02-07 00:31:33,469 - INFO - Found 1 search results
+2025-02-07 00:31:33,469 - INFO - Found 1 results for ca.pawan@gmail.com
+2025-02-07 00:31:33,470 - INFO - Search history saved successfully
+2025-02-07 00:31:33,533 - INFO - Searching for contact: tarakgst.arka@gmail.com
+2025-02-07 00:31:40,638 - INFO - Found 1 search results
+2025-02-07 00:31:40,639 - INFO - Found 1 results for tarakgst.arka@gmail.com
+2025-02-07 00:31:40,639 - INFO - Search history saved successfully
+2025-02-07 00:31:40,704 - INFO - Searching for contact: Raghavendra.Manchikanti@nuance.com
+2025-02-07 00:31:47,852 - INFO - Found 1 search results
+2025-02-07 00:31:47,852 - INFO - Found 1 results for Raghavendra.Manchikanti@nuance.com
+2025-02-07 00:31:47,853 - INFO - Search history saved successfully
+2025-02-07 00:31:47,917 - INFO - Searching for contact: sanatdatta23@gmail.com
+2025-02-07 00:31:55,088 - INFO - Found 1 search results
+2025-02-07 00:31:55,089 - INFO - Found 1 results for sanatdatta23@gmail.com
+2025-02-07 00:31:55,089 - INFO - Search history saved successfully
+2025-02-07 00:31:55,153 - INFO - Searching for contact: etaxtion67@gmail.com
+2025-02-07 00:32:02,277 - INFO - Found 1 search results
+2025-02-07 00:32:02,277 - INFO - Found 1 results for etaxtion67@gmail.com
+2025-02-07 00:32:02,278 - INFO - Search history saved successfully
+2025-02-07 00:32:02,341 - INFO - Searching for contact: caansaha.asso@gmail.com
+2025-02-07 00:32:09,457 - INFO - Found 1 search results
+2025-02-07 00:32:09,457 - INFO - Found 1 results for caansaha.asso@gmail.com
+2025-02-07 00:32:09,458 - INFO - Search history saved successfully
+2025-02-07 00:32:09,523 - INFO - Searching for contact: accounts@hardikdyechem.com
+2025-02-07 00:32:16,686 - INFO - Found 1 search results
+2025-02-07 00:32:16,686 - INFO - Found 1 results for accounts@hardikdyechem.com
+2025-02-07 00:32:16,687 - INFO - Search history saved successfully
+2025-02-07 00:32:16,751 - INFO - Searching for contact: sushant@3003bc.com
+2025-02-07 00:32:23,872 - INFO - Found 1 search results
+2025-02-07 00:32:23,872 - INFO - Found 1 results for sushant@3003bc.com
+2025-02-07 00:32:23,872 - INFO - Search history saved successfully
+2025-02-07 00:32:23,936 - INFO - Searching for contact: rathtalaservicestation@gmail.com
+2025-02-07 00:32:31,096 - INFO - Found 1 search results
+2025-02-07 00:32:31,097 - INFO - Found 1 results for rathtalaservicestation@gmail.com
+2025-02-07 00:32:31,097 - INFO - Search history saved successfully
+2025-02-07 00:32:31,161 - INFO - Searching for contact: debasish.sarkar@atclogistics.in
+2025-02-07 00:32:38,332 - INFO - Found 1 search results
+2025-02-07 00:32:38,332 - INFO - Found 1 results for debasish.sarkar@atclogistics.in
+2025-02-07 00:32:38,333 - INFO - Search history saved successfully
+2025-02-07 00:32:38,397 - INFO - Searching for contact: neeljanai7@gmail.com
+2025-02-07 00:32:45,506 - INFO - Found 1 search results
+2025-02-07 00:32:45,507 - INFO - Found 1 results for neeljanai7@gmail.com
+2025-02-07 00:32:45,507 - INFO - Search history saved successfully
+2025-02-07 00:32:45,571 - INFO - Searching for contact: halimagrofood@gmail.com
+2025-02-07 00:32:52,686 - INFO - Found 1 search results
+2025-02-07 00:32:52,687 - INFO - Found 1 results for halimagrofood@gmail.com
+2025-02-07 00:32:52,687 - INFO - Search history saved successfully
+2025-02-07 00:32:52,757 - INFO - Searching for contact: prsh_gpt@yahoo.co.in
+2025-02-07 00:32:59,905 - INFO - Found 1 search results
+2025-02-07 00:32:59,906 - INFO - Found 1 results for prsh_gpt@yahoo.co.in
+2025-02-07 00:32:59,906 - INFO - Search history saved successfully
+2025-02-07 00:32:59,969 - INFO - Searching for contact: debabratapaul45@gmail.com
+2025-02-07 00:33:07,112 - INFO - Found 1 search results
+2025-02-07 00:33:07,112 - INFO - Found 1 results for debabratapaul45@gmail.com
+2025-02-07 00:33:07,114 - INFO - Search history saved successfully
+2025-02-07 00:33:07,178 - INFO - Searching for contact: incfrmbp2@gmail.com
+2025-02-07 00:33:14,292 - INFO - Found 1 search results
+2025-02-07 00:33:14,292 - INFO - Found 1 results for incfrmbp2@gmail.com
+2025-02-07 00:33:14,293 - INFO - Search history saved successfully
+2025-02-07 00:33:14,357 - INFO - Searching for contact: tscs41@gmail.com
+2025-02-07 00:33:21,503 - INFO - Found 1 search results
+2025-02-07 00:33:21,503 - INFO - Found 1 results for tscs41@gmail.com
+2025-02-07 00:33:21,504 - INFO - Search history saved successfully
+2025-02-07 00:33:21,568 - INFO - Searching for contact: ssaha@aol.in
+2025-02-07 00:33:28,649 - INFO - Found 1 search results
+2025-02-07 00:33:28,649 - INFO - Found 1 results for ssaha@aol.in
+2025-02-07 00:33:28,650 - INFO - Search history saved successfully
+2025-02-07 00:33:28,712 - INFO - Searching for contact: zafariqbalcool@gmail.com

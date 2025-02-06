@@ -46,6 +46,7 @@ options.add_argument('--no-sandbox')
 options.add_argument("--window-size=1920,1080")
 # initialize the Chrome driver with service, selenium-wire options, and chrome options
 driver = webdriver.Chrome(
+    # command_executor="http://localhost:4444/wd/hub",
     seleniumwire_options=seleniumwire_options,
     options=options
 )

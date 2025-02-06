@@ -25,7 +25,7 @@ pg_cursor = pg_conn.cursor()
 
 # Redis list names
 redis_lists_numbers = ['amazon', 'flipkart', 'whatsapp', "india_ajio_housing_toi_mobile_data", "microsoft_number"]
-redis_lists_emails = ['quora',  "microsoft_email"]
+redis_lists_emails = ['quora',  "microsoft_email", "skype"]
 redis_lists_numbers_extras = ["indiamart", "housing", "toi", "ajio"]
 redis_results_channels = [f"{channel}_results" for channel in
                           redis_lists_numbers + redis_lists_emails + redis_lists_numbers_extras]
@@ -69,7 +69,7 @@ def push_to_redis(file_path, redis_lists):
 
             # Process each phone number
             for i, row in enumerate(csv_reader):
-                if i >= 100:
+                if i >= 50:
                     break
                 if row:
                     phone_number = row[0]
