@@ -147,7 +147,8 @@ def main():
             email = redis_client.brpop(REDIS_INPUT_QUEUE)
             if not email:
                 print("No more numbers to process. Exiting.")
-                # print(f"Total execution time: {time.time() - total_start_time:.2f} seconds")
+                end_time = int(time.time() * 1000)
+                print(f"Runtime: {end_time - start_time}ms")
                 break
             email = email[1]
 
