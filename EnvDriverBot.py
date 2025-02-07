@@ -1,6 +1,7 @@
 import threading
 import subprocess
 import redis
+
 redis_client = redis.Redis(
     host='redis-19800.crce179.ap-south-1-1.ec2.redns.redis-cloud.com',
     port=19800,
@@ -13,19 +14,24 @@ redis_client = redis.Redis(
 # Dictionary to keep track of running processes
 processes = {}
 
+
 def run_scrapper(scrapper_name):
     if scrapper_name == 'amazon':
         print("Running Amazon scrapper")
-        process = subprocess.Popen(['python', 'AmazonScrapper.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(['python', 'AmazonScrapper.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   text=True)
     elif scrapper_name == 'flipkart':
         print("Running Flipkart scrapper")
-        process = subprocess.Popen(['python', 'FlipkartScrapper.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(['python', 'FlipkartScrapper.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   text=True)
     elif scrapper_name == 'microsoft_number':
         print("Running Microsoft Number scrapper")
-        process = subprocess.Popen(['python', 'MicrosoftNumber.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(['python', 'MicrosoftNumber.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   text=True)
     elif scrapper_name == 'microsoft_email':
         print("Running Microsoft Email scrapper")
-        process = subprocess.Popen(['python', 'MicrosoftEmail.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(['python', 'MicrosoftEmail.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   text=True)
     elif scrapper_name == 'skype':
         print("Running Skype scrapper")
         process = subprocess.Popen(['python', 'Skype.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -43,6 +49,7 @@ def run_scrapper(scrapper_name):
     threading.Thread(target=print_output, args=(process,), daemon=True).start()
     return process
 
+
 def stop_scrapper(scrapper_name):
     if scrapper_name in processes:
         processes[scrapper_name].terminate()
@@ -50,6 +57,7 @@ def stop_scrapper(scrapper_name):
         print(f"Stopped {scrapper_name} scrapper")
     else:
         print(f"No running scrapper found with name {scrapper_name}")
+
 
 def handle_redis_message(message):
     command, scrapper_name = message.split()
@@ -65,12 +73,14 @@ def handle_redis_message(message):
     else:
         print(f"Unknown command: {command}")
 
+
 def listen_to_redis():
     pubsub = redis_client.pubsub()
     pubsub.subscribe('scrapper_commands')
     for message in pubsub.listen():
         if message['type'] == 'message':
             handle_redis_message(message['data'])
+
 
 if __name__ == '__main__':
     redis_thread = threading.Thread(target=listen_to_redis, daemon=True)
