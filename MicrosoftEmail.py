@@ -142,9 +142,9 @@ def main():
         driver = setup_chrome_driver()
 
         processed_count = 0
-        while processed_count < total_emails:
+        while True:
             # Get email from the end of the queue (right side)
-            email = redis_client.brpop(REDIS_INPUT_QUEUE)
+            email = redis_client.brpop(REDIS_INPUT_QUEUE, timeout=30)
             if not email:
                 print("No more numbers to process. Exiting.")
                 end_time = int(time.time() * 1000)
@@ -153,16 +153,16 @@ def main():
             email = email[1]
 
             # Process the email
-            logger.info(f"Processing email: {email}")
+            print(f"Processing email: {email}")
             result = process_email(driver, email)
 
             # Store result
             redis_client.lpush(REDIS_OUTPUT_QUEUE, result)
             processed_count += 1
-            logger.info(f"Processed {processed_count}/{total_emails} emails")
+            print(f"Processed {processed_count}/{total_emails} emails")
 
     except Exception as e:
-        logger.error(f"Script error: {e}")
+        print(f"Script error: {e}")
 
     finally:
         if driver:

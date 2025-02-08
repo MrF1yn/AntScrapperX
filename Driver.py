@@ -69,7 +69,7 @@ def push_to_redis(file_path, redis_lists):
 
             # Process each phone number
             for i, row in enumerate(csv_reader):
-                if i >= 50:
+                if i >= 100:
                     break
                 if row:
                     phone_number = row[0]
